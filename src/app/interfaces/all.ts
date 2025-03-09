@@ -47,3 +47,29 @@ export interface Item {
   created: Date;
   updated: Date;
 }
+
+export interface Project {
+  id: number;
+  number: string;
+  name: string;
+  owner: string;
+  partner: string;
+  startDate: Date;
+  endDate: Date;
+  budget: number;
+  spent: number;
+  currency: string;
+  created: Date;
+  updated: Date;
+}
+
+export interface Projects extends Paginator {
+  items: Project[];
+}
+
+export interface Paginator {
+  page: number;
+  perPage: number;
+  totalItems: number;
+  totalPages: number;
+}

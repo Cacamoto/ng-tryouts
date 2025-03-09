@@ -26,5 +26,5 @@ Pass: 1234567890
 Įvesti darbuotojo id:
 
 ```
-379
+123 arba 379
 ```

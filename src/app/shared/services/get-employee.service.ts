@@ -3,19 +3,17 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { Employee } from '../../interfaces/all';
-import PocketBase from 'pocketbase';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GetEmployeeService {
   private baseUrl = environment.baseUrl;
-  // private pb = environment.pb;
   public employeeData = signal<Employee | null>(null);
 
   constructor(private http: HttpClient) {}
 
-  public fetchEmployeeData(employeeNo: number): Observable<any> {
+  public fetchEmployeeData(employeeNo: number): Observable<Employee> {
     const url = `${this.baseUrl}/api/collections/employee/records/${employeeNo}?expand=employeeItems`;
     return this.http.get<Employee>(url).pipe(
       tap((data) => {
@@ -29,10 +27,4 @@ export class GetEmployeeService {
       })
     );
   }
-
-  // async fetchEmployeeData(employeeNo: number) {
-  //   const record = await this.pb.collection('employee').getOne('RECORD_ID', {
-  //     expand: 'relField1,relField2.subRelField',
-  //   });
-  // }
 }
