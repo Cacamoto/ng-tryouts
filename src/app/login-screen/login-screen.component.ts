@@ -1,4 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  inject,
+  computed,
+} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import {
   FormControl,
@@ -8,6 +13,10 @@ import {
 } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { CommonModule } from '@angular/common';
+import { GetEmployeeService } from '../shared/services/get-employee.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ClientResponseError } from 'pocketbase';
 
 @Component({
   selector: 'app-login-screen',
@@ -17,6 +26,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    CommonModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -52,6 +62,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     'mat-card-title {padding: 1rem; padding-bottom: 0; font-weight: bold;}',
     'mat-card-subtitle {padding: 1rem; padding-top: 0;}',
     '.full {flex: 1}',
+    '.err {font-size: 12px;width: 100%; padding: 0 16px;}',
   ],
 })
 export class LoginScreenComponent {
@@ -60,12 +71,34 @@ export class LoginScreenComponent {
   scan_card = 'Prilieskite savo RFID kortelę prie skaitytuvo.';
   must_enter = 'Būtina įvesti ';
   employee_no = 'darbuotojo kodą!';
+  employee_not_found = 'Darbuotojas su tokiu ID neegzistuoja.';
+  unknown_error = 'Įvyko nežinoma klaida.';
+
+  private getEmployeeService = inject(GetEmployeeService);
+  private _snackBar = inject(MatSnackBar);
+
+  employeeData = computed(() => this.getEmployeeService.employeeData());
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
   onSubmit() {
     if (this.employeeNoForm.valid) {
-      console.log('Form is valid:', this.employeeNoForm.value);
+      const employeeNo = Number(this.employeeNoForm.value);
+      this.getEmployeeService.fetchEmployeeData(employeeNo).subscribe({
+        next: () => {
+          console.log(this.employeeData());
+        },
+        error: (error: ClientResponseError) => {
+          if (error.status === 404) {
+            this.openSnackBar(this.employee_not_found, 'X');
+          } else {
+            this.openSnackBar(this.unknown_error, 'X');
+          }
+        },
+      });
     } else {
-      console.log('Form is invalid');
       this.employeeNoForm.markAsTouched();
     }
   }

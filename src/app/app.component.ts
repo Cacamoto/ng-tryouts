@@ -1,11 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, inject, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginScreenComponent } from './login-screen/login-screen.component';
+import { EmployeeDashComponent } from './employee-dash/employee-dash.component';
+import { GetEmployeeService } from './shared/services/get-employee.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatIconModule, LoginScreenComponent],
+  imports: [
+    RouterOutlet,
+    MatIconModule,
+    LoginScreenComponent,
+    EmployeeDashComponent,
+    CommonModule,
+  ],
   template: `
     <header>
       <mat-icon
@@ -16,8 +25,10 @@ import { LoginScreenComponent } from './login-screen/login-screen.component';
       <h1>{{ title }}</h1>
     </header>
     <main>
-      @if (2 > 1) {
+      @if (employeeData() === null) {
       <app-login-screen />
+      } @else {
+      <app-employee-dash />
       }
     </main>
 
@@ -31,5 +42,8 @@ import { LoginScreenComponent } from './login-screen/login-screen.component';
   ],
 })
 export class AppComponent {
+  private getEmployeeService = inject(GetEmployeeService);
+  employeeData = computed(() => this.getEmployeeService.employeeData());
+
   title = 'Prekių atsiėmimo terminalas';
 }
