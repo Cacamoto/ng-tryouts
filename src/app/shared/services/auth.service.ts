@@ -28,4 +28,19 @@ export class AuthService {
 
     return pb.authStore.isValid;
   }
+
+  public async logout() {
+    const pb = new PocketBase(environment.baseUrl);
+
+    return await pb.authStore.clear();
+  }
+
+  public updateUserSubject() {
+    const pb = new PocketBase(environment.baseUrl);
+    this.userSubject.next({
+      isValid: pb.authStore.isValid,
+      authModel: pb.authStore.record,
+      token: pb.authStore.token,
+    });
+  }
 }

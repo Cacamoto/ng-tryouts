@@ -28,3 +28,12 @@ Pass: 1234567890
 ```
 123 arba 379
 ```
+
+## Admin panel
+
+Login creds:
+
+```
+Login: admin@123.com
+Pass: 1234567890
+```

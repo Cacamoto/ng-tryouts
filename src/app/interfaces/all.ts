@@ -61,6 +61,9 @@ export interface Project {
   currency: string;
   created: Date;
   updated: Date;
+  expand: {
+    items: Item[] | null;
+  };
 }
 
 export interface Projects extends Paginator {

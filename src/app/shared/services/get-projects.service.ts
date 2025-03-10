@@ -13,9 +13,12 @@ export class GetProjectsService {
 
   constructor(private http: HttpClient) {}
 
-  public fetchProjectsData(): Observable<Projects> {
-    const perPage = 3;
-    const url = `${this.baseUrl}/api/collections/projects/records?perPage=${perPage}`;
+  public fetchProjectsData(
+    itemCount: number,
+    page: number
+  ): Observable<Projects> {
+    const perPage = itemCount;
+    const url = `${this.baseUrl}/api/collections/projects/records?perPage=${perPage}&page=${page}&expand=items`;
     return this.http.get<Projects>(url).pipe(
       tap((data) => {
         console.log('Projects data:', data);
