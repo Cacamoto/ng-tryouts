@@ -493,6 +493,7 @@ export class EmployeeDashComponent implements OnInit {
 
   selectProject(project: Project) {
     this.selectedProject.set(project);
+    console.log('Selected project: ', project);
   }
 
   clearProject() {
@@ -538,6 +539,7 @@ export class EmployeeDashComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(() => {
       this.clearProject();
+      this.getProjectsService.fetchProjectsData(this.itemCount, 1).subscribe();
     });
   }
 

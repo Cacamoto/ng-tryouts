@@ -12,7 +12,7 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { SaveItemService } from './shared/services/save-item.service';
-import { Employee, Item, Project, WarehouseProduct } from './interfaces/all';
+import { Employee, Project, WarehouseProduct } from './interfaces/all';
 
 type UpdateDisplayFunction = (display: string) => void;
 
@@ -115,7 +115,6 @@ export class ConfirmDialogComponent {
   employee_no = 'darbuotojo kodą!';
 
   onConfirm(UID: number) {
-    console.log(UID);
     this.data.onConfirm(this.updateDisplay.bind(this));
   }
 

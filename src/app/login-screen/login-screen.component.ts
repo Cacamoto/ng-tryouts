@@ -107,9 +107,6 @@ export class LoginScreenComponent implements OnInit {
     if (this.employeeNoForm.valid) {
       const employeeNo = Number(this.employeeNoForm.value);
       this.getEmployeeService.fetchEmployeeData(employeeNo).subscribe({
-        next: () => {
-          console.log(this.employeeData());
-        },
         error: (error: ClientResponseError) => {
           if (error.status === 404) {
             this.openSnackBar(this.employee_not_found, 'X');

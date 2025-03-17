@@ -50,9 +50,17 @@ export interface Item {
   assignDocument: number | null;
   lot: number | null;
   employee: number | null;
+  expand: {
+    employee: Employee;
+    project: Project;
+  };
   project: number | null;
   created: Date | null;
   updated: Date | null;
+}
+
+export interface Items extends Paginator {
+  items: Item[];
 }
 
 export interface Project {

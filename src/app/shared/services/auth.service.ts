@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import PocketBase from 'pocketbase';
 import { UserModel } from '../../interfaces/all';
 import { environment } from '../../../environments/environment.development';
@@ -11,6 +11,9 @@ export class AuthService {
   private userSubject: BehaviorSubject<UserModel | null> =
     new BehaviorSubject<UserModel | null>(null);
   user$ = this.userSubject.asObservable();
+  private userSignal = signal<UserModel | null>(null);
+
+  public token = computed(() => this.userSignal()?.token ?? null);
 
   constructor() {}
 
