@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap, catchError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
-import { Employee } from '../../interfaces/all';
+import { Employee, Employees } from '../../interfaces/all';
 
 @Injectable({
   providedIn: 'root',
@@ -26,5 +26,10 @@ export class GetEmployeeService {
         throw error;
       })
     );
+  }
+
+  public fetchEmployeeIDs() {
+    const url = `${this.baseUrl}/api/collections/employee/records`;
+    return this.http.get<Employees>(url);
   }
 }

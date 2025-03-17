@@ -28,8 +28,12 @@ export interface Employee {
   };
 }
 
+export interface Employees extends Paginator {
+  items: Employee[];
+}
+
 export interface Item {
-  id: number;
+  id: number | null;
   seq: number;
   productName: string;
   productCode: string;
@@ -38,14 +42,17 @@ export interface Item {
   expireDate: Date | null;
   unit: string;
   warehouseFrom: number | null;
-  employeeFrom: string;
+  employeeFrom: string | null;
   currency: string;
   quantity: number;
   price: number;
   assignDate: Date | null;
   assignDocument: number | null;
-  created: Date;
-  updated: Date;
+  lot: number | null;
+  employee: number | null;
+  project: number | null;
+  created: Date | null;
+  updated: Date | null;
 }
 
 export interface Project {
@@ -61,9 +68,33 @@ export interface Project {
   currency: string;
   created: Date;
   updated: Date;
+  items: string[] | null;
   expand: {
     items: Item[] | null;
   };
+}
+
+export interface WarehouseProduct {
+  id: number;
+  warehouseId: number;
+  warehouseName: string;
+  productId: number;
+  productName: string;
+  productCode: string;
+  stockQuantity: number;
+  reservedQuantity: number;
+  arrivesQuantity: number;
+  lot: number;
+  fixedAssetNo: number;
+  serialNumber: number;
+  price: number;
+  unit: string;
+  created: Date;
+  updated: Date;
+}
+
+export interface WarehouseProducts extends Paginator {
+  items: WarehouseProduct[];
 }
 
 export interface Projects extends Paginator {
@@ -75,4 +106,10 @@ export interface Paginator {
   perPage: number;
   totalItems: number;
   totalPages: number;
+}
+
+export interface SelectedProduct {
+  productCode: number;
+  lot: number;
+  quantity: number;
 }

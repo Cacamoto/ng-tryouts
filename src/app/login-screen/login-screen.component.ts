@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   inject,
   computed,
+  OnInit,
+  signal,
 } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import {
@@ -17,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import { GetEmployeeService } from '../shared/services/get-employee.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClientResponseError } from 'pocketbase';
+import { Employees } from '../interfaces/all';
 
 @Component({
   selector: 'app-login-screen',
@@ -55,6 +58,18 @@ import { ClientResponseError } from 'pocketbase';
         </mat-card-content>
       </div>
     </mat-card>
+    <mat-card class="info" appearance="outlined">
+      <div class="full">
+        <mat-card-title>{{ available_ids }}</mat-card-title>
+        <mat-card-subtitle>
+          @for (employee of employees()?.items; track employee.id) {
+          <li>{{ employee.id }}</li>
+          } @empty {
+          <li>{{ no_employees }}</li>
+          }
+        </mat-card-subtitle>
+      </div>
+    </mat-card>
   `,
   styles: [
     'mat-card {display: flex; flex-direction: row; gap: 16px; width: 100vw; max-width: 768px;}',
@@ -63,9 +78,10 @@ import { ClientResponseError } from 'pocketbase';
     'mat-card-subtitle {padding: 1rem; padding-top: 0;}',
     '.full {flex: 1}',
     '.err {font-size: 12px;width: 100%; padding: 0 16px;}',
+    '.info {margin-top: 2rem}',
   ],
 })
-export class LoginScreenComponent {
+export class LoginScreenComponent implements OnInit {
   employeeNoForm = new FormControl('', [Validators.required]);
   please_login = 'Prašome prisijungti!';
   scan_card = 'Prilieskite savo RFID kortelę prie skaitytuvo.';
@@ -73,6 +89,8 @@ export class LoginScreenComponent {
   employee_no = 'darbuotojo kodą!';
   employee_not_found = 'Darbuotojas su tokiu ID neegzistuoja.';
   unknown_error = 'Įvyko nežinoma klaida.';
+  available_ids = 'Galimi darbuotojų ID:';
+  no_employees = 'Darbuotojų nėra.';
 
   private getEmployeeService = inject(GetEmployeeService);
   private _snackBar = inject(MatSnackBar);
@@ -82,6 +100,8 @@ export class LoginScreenComponent {
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+
+  employees = signal<Employees | null>(null);
 
   onSubmit() {
     if (this.employeeNoForm.valid) {
@@ -101,5 +121,16 @@ export class LoginScreenComponent {
     } else {
       this.employeeNoForm.markAsTouched();
     }
+  }
+
+  ngOnInit() {
+    this.getEmployeeService.fetchEmployeeIDs().subscribe({
+      next: (data: Employees) => {
+        this.employees.set(data as Employees);
+      },
+      error: (error: ClientResponseError) => {
+        console.log(error);
+      },
+    });
   }
 }
